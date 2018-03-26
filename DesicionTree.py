@@ -179,8 +179,8 @@ def create_node(data, *, father=None, feature_val=[0], method='id3'):
                 continue
         #分类 特征集 特征对应gda
         cs, fts, g_D_A = counts_gDA(d, skip_features, method=method)
-        # print('分类:',cs)
-        # print('feature sets:', fts)
+        print('分类:',cs)
+        print('feature sets:', fts)
         print('method=', method)
         if method == 'id3':
             print('信息增量 g_D_A:', g_D_A)
@@ -364,16 +364,16 @@ def book_demo():
 def kaggle_Tatanic_data():
 
     def processing_data(trainfile):
-    with open(trainfile, "r", encoding="utf-8") as f:
-        rd = csv.reader(f)
-        rows = [row for row in rd]
-    return rows
+        with open(trainfile, "r", encoding="utf-8") as f:
+            rd = csv.reader(f)
+            rows = [row for row in rd]
+        return rows
 
     data = processing_data('/opt/study/python3/AI/train.csv')
     #PassengerId,Survived,Pclass,Name,Sex,Age,SibSp,Parch,Ticket,Fare,Cabin,Embarked
     #去掉id,name,Ticket,Fare,Carbin
     data = np.array(data)
-    data = np.delete(data, [0, 3, 8, 9, 10], axis=1)
+    data = np.delete(data, [0, 3, 5,8, 9, 10], axis=1)
     #新的年龄在第几列?
     # row, col = np.where(data == 'Age')
     #字符float化,还有''未知年龄...怎么处理
@@ -544,6 +544,7 @@ def kaggle_Tatanic_demo_better():
 
 if __name__ == '__main__':
 
-    # kaggle_Tatanic_demo_better()
+    # book_demo()
     kaggle_Tatanic_data()
+    # kaggle_Tatanic_demo_better()
 
