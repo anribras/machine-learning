@@ -153,8 +153,9 @@ def create_node(data, *, father=None, feature_val=[0], method='id3'):
             continue
         #skip_feature满了,说明特征集用完了，树即将构建完成,选择剩余数据中较多的那个类作为叶节点
         if full_fts != []:
-            if (sum(skip_features) == sum(list(range(len(full_fts))))):
-                # or len(feature_val) >= d.shape[0] \
+            if (sum(skip_features) == sum(list(range(len(full_fts))))) \
+                or len(feature_val) >= d.shape[0] \
+                or 2 >= d.shape[0] :
                 #特征值空间 [0, 1, 2],子集:  (2, 5)
                 #如果出现特征值空间还大于子集合个数了，有点异常,同样按谁数目多，就按谁来取
                 if len(feature_val) > d.shape[0]:
@@ -506,33 +507,42 @@ def kaggle_Tatanic_demo_better():
         dataset.loc[dataset['Age'] > 64, 'Age']
 
         # Feature selection: remove variables no longer containing relevant information
-        drop_elements = ['PassengerId', 'Name', 'Ticket', 'Cabin', 'SibSp']
+        drop_elements = ['PassengerId', 'Name', 'Ticket', 'Cabin', 'SibSp', 
+        # new added
+        'FamilySize',
+        'Parch',
+        # 'Fare',
+        # 'Title',
+        'Has_Cabin',
+        'IsAlone',
+        'Age',
+        'Sex',
+        ]
         train = train.drop(drop_elements, axis = 1)
         test  = test.drop(drop_elements, axis = 1)
 
         # move 'Surivied' to the last column
-        surived =  train.pop('Survived')
-        train.insert(0,'Survided',surived)
 
-        drop_elements = ['FamilySize','Parch']
-        train = train.drop(drop_elements, axis = 1)
-        test  = test.drop(drop_elements, axis = 1)
+        surived =  train.pop('Survived')
+        train.insert(4,'Survided',surived)
+
 
         train_np = np.array(train)
         test_np = np.array(test)
         print(train_np)
 
         feature["leaf"] = -1
-        feature["Age"] = 0
-        feature["Embarked"] = 1
-        # feature["FamilySize"] = 2
-        feature["Fare"] = 2
-        feature["Has_Carbin"] = 3
-        feature["IsAlone"] = 4
+        feature["Pclass"] = 0
+        # feature["Sex"] = 1
+        # feature["Age"] = 2
+        # feature["FamilySize"] = 3
+        feature["Fare"] = 1
+        feature["Embarked"] = 2
+        # feature["Has_Cabin"] = 4
+        # feature["IsAlone"] = 4
+        feature["Title"] = 3
         # feature["Parch"] = 6
-        feature["Pclass"] = 5
-        feature["Sex"] = 6
-        feature["class"] =7
+        feature["class"] =5
 
         train.head(0)
         create_node(train_np, father='root', method='id3')
@@ -545,6 +555,6 @@ def kaggle_Tatanic_demo_better():
 if __name__ == '__main__':
 
     # book_demo()
-    kaggle_Tatanic_data()
-    # kaggle_Tatanic_demo_better()
+    # kaggle_Tatanic_data()
+    kaggle_Tatanic_demo_better()
 
